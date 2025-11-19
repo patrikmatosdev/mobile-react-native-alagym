@@ -19,7 +19,8 @@
         "monochromeImage": "./assets/images/icon.jpg"
       },
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.anonymous.alagymapp"
     },
     "web": {
       "output": "static",
