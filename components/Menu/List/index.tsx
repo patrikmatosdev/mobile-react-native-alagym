@@ -17,7 +17,7 @@ const List = ({ items }: Props) => {
             {items.map((item, index) => (
                 <View key={index}>
                     {index === 0 && <Divider />}
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={item.onPress}>
                         <View style={{padding: 16}}>
                             <Text style={{fontWeight: "bold"}}>{item.title}</Text>
                         </View>
