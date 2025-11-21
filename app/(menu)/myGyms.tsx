@@ -1,7 +1,8 @@
 import { getAllGym } from "@/api/gym";
+import { GymContext } from "@/context/GymContext";
 import { Branch } from "@/types";
 import { useRouter } from "expo-router";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { FlatList, StyleSheet, TouchableOpacity, View } from "react-native";
 import { Avatar, Card, FAB, IconButton, Text, useTheme } from "react-native-paper";
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -14,6 +15,7 @@ interface Props {
 
 const MyGymsScreen = ({ onPressBranch }: Props) => {
     const [branches, setBranches] = useState<Branch[]>([]);
+    const {setSelected} = useContext(GymContext);
     const theme = useTheme();
     const router = useRouter();
 
@@ -27,6 +29,11 @@ const MyGymsScreen = ({ onPressBranch }: Props) => {
             console.log({error});
             setBranches([]);
         }
+    }
+
+    const handleEdit = (id?: string) => {
+        setSelected(Number(id));
+        router.navigate("/(gym)/editGym");
     }
 
     useEffect(() => {
@@ -71,7 +78,7 @@ const MyGymsScreen = ({ onPressBranch }: Props) => {
                                 <IconButton
                                     icon="pencil"
                                     size={22}
-                                    onPress={() => console.log("Editar", item.name)}
+                                    onPress={() => handleEdit(item?.id)}
                                     iconColor={theme.colors.primary}
                                 />
 

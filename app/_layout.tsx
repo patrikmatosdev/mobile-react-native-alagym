@@ -1,4 +1,5 @@
 import AlagymTheme from "@/constants/theme";
+import { GymProvider } from "@/context/GymContext";
 import { UserContext, UserProvider } from "@/context/UserContext";
 import { Redirect, Slot } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
@@ -9,14 +10,16 @@ import 'react-native-reanimated';
 const isLoggedIn = false;
 
 export default function RootLayout() {
-    const { isLogged} = useContext(UserContext);
+    const { isLogged } = useContext(UserContext);
     return (
         <UserProvider>
-            <PaperProvider theme={AlagymTheme}>
-                {isLogged ? <Redirect href="/(tabs)" /> : <Redirect href="/(auth)/login" />}
-                <Slot />
-                <StatusBar style="auto" />
-            </PaperProvider>
+            <GymProvider>
+                <PaperProvider theme={AlagymTheme}>
+                    {isLogged ? <Redirect href="/(tabs)" /> : <Redirect href="/(auth)/login" />}
+                    <Slot />
+                    <StatusBar style="auto" />
+                </PaperProvider>
+            </GymProvider>
         </UserProvider>
     );
 }

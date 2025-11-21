@@ -9,7 +9,6 @@ import {
 } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-// 🚀 Importe 'useRouter' para navegação
 import { updateUser } from '@/api/users';
 import { UserContext } from '@/context/UserContext';
 import { formatCPF, formatInputCPF } from '@/utils/format';
