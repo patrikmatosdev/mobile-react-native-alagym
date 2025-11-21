@@ -11,8 +11,14 @@ const createUser = async (payload: User) => {
     return response;
 }
 
+const updateUser = async (id?: number, payload?: User) => {
+    const response = await api.put(`/${id}`, payload);
+    return response;
+}
+
 export {
     createUser,
-    getUser
+    getUser,
+    updateUser
 };
 

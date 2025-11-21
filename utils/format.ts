@@ -1,18 +1,25 @@
 
-const formatCPF = (text: string) => {
-    let cpf = text.replace(/\D/g, '');
-    if (cpf.length > 3) cpf = cpf.replace(/(\d{3})(\d)/, '$1.$2');
-    if (cpf.length > 6) cpf = cpf.replace(/(\d{3})(\d)/, '$1.$2');
-    if (cpf.length > 9) cpf = cpf.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
-    return cpf.substring(0, 14);
+const formatInputCPF = (text: string) => {
+  let cpf = text.replace(/\D/g, '');
+  if (cpf.length > 3) cpf = cpf.replace(/(\d{3})(\d)/, '$1.$2');
+  if (cpf.length > 6) cpf = cpf.replace(/(\d{3})(\d)/, '$1.$2');
+  if (cpf.length > 9) cpf = cpf.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+  return cpf.substring(0, 14);
 };
 
-const formatInitialsName =(name: string): string => {
+const formatCPF = (s?: string) => {
+  if (!s) return ""
+
+  const nums = s.replace(/\D/g, '').padStart(11, '0').slice(0, 11);
+  return nums.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+}
+
+const formatInitialsName = (name: string): string => {
   if (!name) return "";
 
   const parts = name.trim().split(/\s+/);
   const first = parts[0][0].toUpperCase();
-  const last = parts.length > 1 
+  const last = parts.length > 1
     ? parts[parts.length - 1][0].toUpperCase()
     : "";
 
@@ -20,7 +27,8 @@ const formatInitialsName =(name: string): string => {
 }
 
 export {
-    formatCPF,
-    formatInitialsName
+  formatCPF,
+  formatInitialsName,
+  formatInputCPF
 };
 

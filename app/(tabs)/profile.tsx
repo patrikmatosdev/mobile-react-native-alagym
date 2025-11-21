@@ -13,17 +13,18 @@ export default function ProfileScreen() {
     logout();
     router.navigate("/(auth)/login");
   }
+  
 
   const items = [
     {
       title: "Editar Perfil",
       icon: "account-edit",
-      onPress: () => console.log("Editar"),
+      onPress: () => router.navigate("/(menu)/editProfile"),
     },
     {
       title: "Minhas academias",
       icon: "bell-outline",
-      onPress: () => console.log("Notificações"),
+      onPress: () => router.navigate("/(menu)/myGyms"),
     },
     {
       title: "Sair",
