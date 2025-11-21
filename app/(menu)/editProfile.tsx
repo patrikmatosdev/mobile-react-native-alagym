@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Alert, ScrollView, StyleSheet, View } from 'react-native';
 import {
     Button,
@@ -10,15 +10,14 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 // 🚀 Importe 'useRouter' para navegação
-import { createUser } from '@/api/users';
-import { formatInputCPF } from '@/utils/format';
-import { useRouter } from 'expo-router';
+import { updateUser } from '@/api/users';
+import { UserContext } from '@/context/UserContext';
+import { formatCPF, formatInputCPF } from '@/utils/format';
 
 
-export default function RegisterScreen() {
+export default function EditProfileScreen() {
     const theme = useTheme();
-    const router = useRouter();
-
+    const {user, refresh} = useContext(UserContext);
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [phone, setPhone] = useState('');
@@ -35,8 +34,7 @@ export default function RegisterScreen() {
     };
 
 
-    const handleRegister = async () => {
-        
+    const handleEdit = async () => {
         try {
             if (!name || !email || !document) {
                 Alert.alert("Erro", "Nome, Email e Documento são obrigatórios.");
@@ -55,10 +53,11 @@ export default function RegisterScreen() {
                 country,
             };
 
-            const response = await createUser(userData);
+            const response = await updateUser(user?.id, userData);
 
             if (response.data) {
-                handleGoToLogin();
+                Alert.alert("Sucesso", "Usuário editado com sucesso.")
+                refresh(document.replace(/\D/g, ''));
             }
         } catch (error) {
             Alert.alert("Erro", "Não foi possível criar a conta");
@@ -69,17 +68,25 @@ export default function RegisterScreen() {
 
     };
 
-
-    const handleGoToLogin = () => {
-        router.navigate("/(auth)/login");
-    };
+    useEffect(() => {
+        if (user?.id) {
+            setName(user?.name);
+            setAddress(user?.address);
+            setCity(user?.city);
+            setDocument(formatCPF(user?.document));
+            setCountry(user?.country);
+            setEmail(user?.email);
+            setPhone(user?.phone);
+            setUserType(user?.type?.toUpperCase());
+        }
+    }, [user])
 
     return (
         <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.colors.background }]}>
             <ScrollView contentContainerStyle={styles.container}>
 
                 <Text style={[styles.title, { color: theme.colors.primary }]}>
-                    Criar Nova Conta
+                    Editar Conta
                 </Text>
 
                 <View style={styles.typeSelector}>
@@ -180,24 +187,14 @@ export default function RegisterScreen() {
 
                 <Button
                     mode="contained"
-                    onPress={handleRegister}
+                    onPress={handleEdit}
                     loading={loading}
                     disabled={loading}
                     style={styles.button}
                     contentStyle={styles.buttonContent}
                 >
-                    {loading ? 'Cadastrando...' : 'Finalizar Cadastro'}
+                    {loading ? 'Editando...' : 'Editar'}
                 </Button>
-
-
-                <Button
-                    mode="text"
-                    onPress={handleGoToLogin}
-                    style={styles.loginButton}
-                >
-                    Já sou cadastrado. Fazer Login
-                </Button>
-
             </ScrollView>
         </SafeAreaView>
     );

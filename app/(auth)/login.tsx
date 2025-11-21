@@ -1,5 +1,5 @@
 import { UserContext } from '@/context/UserContext';
-import { formatCPF } from "@/utils/format";
+import { formatInputCPF } from "@/utils/format";
 import { useRouter } from 'expo-router';
 import React, { useContext, useEffect, useState } from 'react';
 import { Alert, StyleSheet, View } from 'react-native';
@@ -14,7 +14,7 @@ export default function LoginCPFScreen() {
     const [document, setDocument] = useState('');
 
     const handleInputChange = (text: string) => {
-        const formated = formatCPF(text);
+        const formated = formatInputCPF(text);
         setDocument(formated);
     }
 

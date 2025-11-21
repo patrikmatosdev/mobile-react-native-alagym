@@ -1,0 +1,153 @@
+import { FlatList, StyleSheet, TouchableOpacity, View } from "react-native";
+import { Avatar, Card, FAB, IconButton, Text, useTheme } from "react-native-paper";
+import { SafeAreaView } from 'react-native-safe-area-context';
+
+export interface Branch {
+    id: string;
+    name: string;
+    address: string;
+    phone: string;
+    students: number;
+    status: "open" | "closed";
+    openingHour: string;
+    closingHour: string;
+    manager: string;
+    image: string;
+}
+
+interface Props {
+    branches?: Branch[];
+    onPressBranch: (branch: Branch) => void;
+}
+
+export const mockBranches: Branch[] = [
+    {
+        id: "1",
+        name: "Alagym Central",
+        address: "Av. Brasil, 1450 - Centro",
+        phone: "(11) 99888-1122",
+        students: 320,
+        status: "open",
+        openingHour: "06:00",
+        closingHour: "22:00",
+        manager: "Ricardo Santos",
+        image: "https://picsum.photos/400/200?random=1"
+    },
+];
+
+const MyGymsScreen = ({ branches = mockBranches, onPressBranch }: Props) => {
+    const theme = useTheme();
+
+    return (
+        <SafeAreaView style={{ flex: 1 }}>
+            <FlatList
+                data={branches}
+                keyExtractor={(item) => item.id}
+                contentContainerStyle={{ padding: 16 }}
+                renderItem={({ item }) => (
+                    <Card mode="contained" style={styles.card}>
+                        <TouchableOpacity style={{ flex: 1 }} onPress={() => onPressBranch(item)}>
+                            <View style={styles.row}>
+
+                                {/* Ícone da unidade */}
+                                <Avatar.Text
+                                    size={50}
+                                    label={item.name[0]}
+                                    style={{ backgroundColor: theme.colors.primary }}
+                                    labelStyle={{ color: theme.colors.onPrimary }}
+                                />
+
+                                {/* Informações */}
+                                <View style={styles.infoContainer}>
+                                    <Text style={styles.title}>{item.name}</Text>
+                                    <Text style={styles.subtitle}>{item.address}</Text>
+
+                                    <Text
+                                        style={[
+                                            styles.status,
+                                            { color: item.status === "open" ? theme.colors.primary : theme.colors.error }
+                                        ]}
+                                    >
+                                        {item.status === "open" ? "Aberta" : "Fechada"}
+                                    </Text>
+                                </View>
+
+                                {/* Editar */}
+                                <IconButton
+                                    icon="pencil"
+                                    size={22}
+                                    onPress={() => console.log("Editar", item.name)}
+                                    iconColor={theme.colors.primary}
+                                />
+
+                                {/* Alunos */}
+                                <View style={styles.studentsContainer}>
+                                    <Text style={styles.students}>{item.students}</Text>
+                                    <Text style={styles.studentsLabel}>alunos</Text>
+                                </View>
+                            </View>
+                        </TouchableOpacity>
+                    </Card>
+                )}
+            />
+
+            {/* BOTÃO FLUTUANTE PARA CRIAR NOVA ACADEMIA */}
+            <FAB
+                icon="plus"
+                style={styles.fab}
+                color={theme.colors.primary}
+                onPress={() => console.log("Criar nova academia")}
+            />
+        </SafeAreaView>
+    );
+};
+
+const styles = StyleSheet.create({
+    card: {
+        marginBottom: 14,
+        padding: 14,
+        borderRadius: 14,
+        elevation: 2,
+    },
+    row: {
+        flexDirection: "row",
+        alignItems: "center",
+    },
+    infoContainer: {
+        marginLeft: 15,
+        flex: 1,
+    },
+    title: {
+        fontSize: 18,
+        fontWeight: "bold",
+    },
+    subtitle: {
+        fontSize: 14,
+        color: "#555",
+        marginTop: 2,
+    },
+    status: {
+        fontSize: 13,
+        marginTop: 4,
+        fontWeight: "600",
+    },
+    studentsContainer: {
+        alignItems: "flex-end",
+    },
+    students: {
+        fontSize: 20,
+        fontWeight: "bold",
+    },
+    studentsLabel: {
+        fontSize: 12,
+        color: "#666",
+    },
+
+    fab: {
+        position: "absolute",
+        bottom: 20,
+        right: 20,
+    }
+});
+
+export default MyGymsScreen;

@@ -20,6 +20,7 @@ interface UserContextProps {
   logout: () => void;
   isLoading: boolean;
   isLogged: boolean;
+  refresh: (doc: string) => void;
 }
 
 interface ProviderProps {
@@ -59,6 +60,15 @@ export function UserProvider({ children }: ProviderProps) {
     }
   }
 
+  const refresh = async (document: string) => {
+    try {
+      const response = await getUser(document);
+      setUser(response.data);
+    } catch (error) {
+      Alert.alert("Erro", "Não foí possivel atualizar")
+    }
+  }
+
   const logout = () => {
     setUser(initialValue);
     setIsLogged(false);
@@ -66,7 +76,7 @@ export function UserProvider({ children }: ProviderProps) {
   }
 
   return (
-    <UserContext.Provider value={{ user, isLoading, isLogged, login, logout }}>
+    <UserContext.Provider value={{ user, isLoading, isLogged, login, logout, refresh }}>
       {children}
     </UserContext.Provider>
   );
