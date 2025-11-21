@@ -13,6 +13,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { updateUser } from '@/api/users';
 import { UserContext } from '@/context/UserContext';
 import { formatCPF, formatInputCPF } from '@/utils/format';
+import { useRouter } from 'expo-router';
 
 
 export default function EditProfileScreen() {
@@ -27,6 +28,7 @@ export default function EditProfileScreen() {
     const [country, setCountry] = useState('');
     const [userType, setUserType] = useState('CLIENT');
     const [loading, setLoading] = useState(false);
+    const router = useRouter();
 
     const handeInputChange = (text: string) => {
         const formatted = formatInputCPF(text);

@@ -1,48 +1,43 @@
+import { getAllGym } from "@/api/gym";
+import { Branch } from "@/types";
+import { useRouter } from "expo-router";
+import { useEffect, useState } from "react";
 import { FlatList, StyleSheet, TouchableOpacity, View } from "react-native";
 import { Avatar, Card, FAB, IconButton, Text, useTheme } from "react-native-paper";
 import { SafeAreaView } from 'react-native-safe-area-context';
-
-export interface Branch {
-    id: string;
-    name: string;
-    address: string;
-    phone: string;
-    students: number;
-    status: "open" | "closed";
-    openingHour: string;
-    closingHour: string;
-    manager: string;
-    image: string;
-}
 
 interface Props {
     branches?: Branch[];
     onPressBranch: (branch: Branch) => void;
 }
 
-export const mockBranches: Branch[] = [
-    {
-        id: "1",
-        name: "Alagym Central",
-        address: "Av. Brasil, 1450 - Centro",
-        phone: "(11) 99888-1122",
-        students: 320,
-        status: "open",
-        openingHour: "06:00",
-        closingHour: "22:00",
-        manager: "Ricardo Santos",
-        image: "https://picsum.photos/400/200?random=1"
-    },
-];
 
-const MyGymsScreen = ({ branches = mockBranches, onPressBranch }: Props) => {
+const MyGymsScreen = ({ onPressBranch }: Props) => {
+    const [branches, setBranches] = useState<Branch[]>([]);
     const theme = useTheme();
+    const router = useRouter();
+
+    const getInitialData = async () => {
+        try {
+            const res = await getAllGym();
+            if (res.data) {
+                setBranches(res.data);
+            }
+        } catch (error) {
+            console.log({error});
+            setBranches([]);
+        }
+    }
+
+    useEffect(() => {
+        getInitialData();
+    }, [])
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <FlatList
                 data={branches}
-                keyExtractor={(item) => item.id}
+                keyExtractor={(item) => item.id?.toString() as string}
                 contentContainerStyle={{ padding: 16 }}
                 renderItem={({ item }) => (
                     <Card mode="contained" style={styles.card}>
@@ -82,7 +77,7 @@ const MyGymsScreen = ({ branches = mockBranches, onPressBranch }: Props) => {
 
                                 {/* Alunos */}
                                 <View style={styles.studentsContainer}>
-                                    <Text style={styles.students}>{item.students}</Text>
+                                    <Text style={styles.students}>{item.students || 0}</Text>
                                     <Text style={styles.studentsLabel}>alunos</Text>
                                 </View>
                             </View>
@@ -96,7 +91,7 @@ const MyGymsScreen = ({ branches = mockBranches, onPressBranch }: Props) => {
                 icon="plus"
                 style={styles.fab}
                 color={theme.colors.primary}
-                onPress={() => console.log("Criar nova academia")}
+                onPress={() => router.push("/(gym)/createGym")}
             />
         </SafeAreaView>
     );
@@ -145,7 +140,7 @@ const styles = StyleSheet.create({
 
     fab: {
         position: "absolute",
-        bottom: 20,
+        bottom: 40,
         right: 20,
     }
 });
