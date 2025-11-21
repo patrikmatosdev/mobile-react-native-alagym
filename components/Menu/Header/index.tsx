@@ -17,7 +17,7 @@ const Header = ({ name, role, description }: Props) => {
         <View style={styles.container}>
             <View style={styles.containerLogo}>
                 <ImageBackground source={logoSource} resizeMode="cover" style={styles.logo} />
-                <View style={{ position: "absolute", bottom: -80, left: 15, flexDirection: "row", alignItems: "center"}}>
+                <View style={styles.containerInfo}>
                     <Avatar.Text
                         size={70}
                         label={formatInitialsName(name)}
@@ -32,7 +32,7 @@ const Header = ({ name, role, description }: Props) => {
                 </View>
             </View>
 
-            <View style={{ padding: 16, gap: 10 }}>
+            <View style={styles.containerAbout}>
                 <Text>{description}</Text>
             </View>
         </View>
@@ -47,13 +47,20 @@ const styles = StyleSheet.create({
     },
     containerLogo: {
         position: "relative",
-        marginBottom: 40
+    },
+    containerInfo: {
+        padding: 16,
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 6,
     },
     logo: {
         height: 100,
         alignItems: "center",
         justifyContent: "center",
-        padding: 50,
         elevation: 4,
+    },
+    containerAbout: {
+        paddingHorizontal: 16,
     }
 });
